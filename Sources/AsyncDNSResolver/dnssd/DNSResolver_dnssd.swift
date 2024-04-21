@@ -14,6 +14,7 @@
 
 #if canImport(Darwin)
 import dnssd
+import DNSMap
 
 /// ``DNSResolver`` implementation backed by dnssd framework.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -93,6 +94,17 @@ extension QueryType {
             return kDNSServiceType_SRV
         case .NAPTR:
             return kDNSServiceType_NAPTR
+        }
+    }
+}
+
+extension Interface {
+    fileprivate var kDNSServiceInterfaceIndex: UInt32 {
+        switch self {
+        case .default:
+            return getDNSServiceInterfaceIndexAny()
+        case .localOnly:
+            return getDNSServiceInterfaceIndexLocalOnly()
         }
     }
 }

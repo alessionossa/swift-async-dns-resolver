@@ -183,6 +183,11 @@ enum QueryType {
     case NAPTR
 }
 
+public enum Interface {
+    case `default`
+    case localOnly
+}
+
 // MARK: - Query reply types
 
 public enum IPAddress: Sendable, Hashable, CustomStringConvertible {
