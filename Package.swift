@@ -44,7 +44,12 @@ let package = Package(
             name: "AsyncDNSResolver",
             dependencies: [
                 "CAsyncDNSResolver",
+                "DNSMap",
             ]
+        ),
+        
+        .target(
+            name: "DNSMap"
         ),
 
         .testTarget(name: "AsyncDNSResolverTests", dependencies: ["AsyncDNSResolver"]),
