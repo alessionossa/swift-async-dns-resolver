@@ -60,7 +60,7 @@ public class CAresDNSResolver: DNSResolver {
     }
 
     /// See ``DNSResolver/queryPTR(name:)``.
-    public func queryPTR(name: String) async throws -> PTRRecord {
+    public func queryPTR(name: String, interface: Interface) async throws -> PTRRecord {
         try await self.ares.query(type: .PTR, name: name, replyParser: Ares.PTRQueryReplyParser.instance)
     }
 
@@ -75,7 +75,7 @@ public class CAresDNSResolver: DNSResolver {
     }
 
     /// See ``DNSResolver/querySRV(name:)``.
-    public func querySRV(name: String) async throws -> [SRVRecord] {
+    public func querySRV(name: String, interface: Interface) async throws -> [SRVRecord] {
         try await self.ares.query(type: .SRV, name: name, replyParser: Ares.SRVQueryReplyParser.instance)
     }
 
@@ -141,6 +141,7 @@ class Ares {
     func query<ReplyParser: AresQueryReplyParser>(
         type: QueryType,
         name: String,
+        interface: Interface = .default,
         replyParser: ReplyParser
     ) async throws -> ReplyParser.Reply {
         try await withTaskCancellationHandler(

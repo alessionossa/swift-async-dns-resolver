@@ -51,7 +51,7 @@ public struct DNSSDDNSResolver: DNSResolver {
     }
 
     /// See ``DNSResolver/queryPTR(name:)``.
-    public func queryPTR(name: String) async throws -> PTRRecord {
+    public func queryPTR(name: String, interface: Interface) async throws -> PTRRecord {
         try await self.dnssd.query(type: .PTR, name: name, replyHandler: DNSSD.PTRQueryReplyHandler.instance)
     }
 
@@ -66,7 +66,7 @@ public struct DNSSDDNSResolver: DNSResolver {
     }
 
     /// See ``DNSResolver/querySRV(name:)``.
-    public func querySRV(name: String) async throws -> [SRVRecord] {
+    public func querySRV(name: String, interface: Interface) async throws -> [SRVRecord] {
         try await self.dnssd.query(type: .SRV, name: name, replyHandler: DNSSD.SRVQueryReplyHandler.instance)
     }
 }
@@ -117,6 +117,7 @@ struct DNSSD {
     func query<ReplyHandler: DNSSDQueryReplyHandler>(
         type: QueryType,
         name: String,
+        interface: Interface = .default,
         replyHandler: ReplyHandler
     ) async throws -> ReplyHandler.Reply {
         let recordStream = AsyncThrowingStream<ReplyHandler.Record, Error> { continuation in
@@ -157,7 +158,7 @@ struct DNSSD {
             let _code = DNSServiceQueryRecord(
                 serviceRefPtr,
                 kDNSServiceFlagsTimeout,
-                0,
+                interface.kDNSServiceInterfaceIndex,
                 name,
                 UInt16(type.kDNSServiceType),
                 UInt16(kDNSServiceClass_IN),

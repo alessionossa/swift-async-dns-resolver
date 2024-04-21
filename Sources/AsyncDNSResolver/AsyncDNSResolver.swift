@@ -74,8 +74,8 @@ public struct AsyncDNSResolver {
     }
 
     /// See ``DNSResolver/queryPTR(name:)``.
-    public func queryPTR(name: String) async throws -> PTRRecord {
-        try await self.underlying.queryPTR(name: name)
+    public func queryPTR(name: String, interface: Interface = .default) async throws -> PTRRecord {
+        try await self.underlying.queryPTR(name: name, interface: interface)
     }
 
     /// See ``DNSResolver/queryMX(name:)``.
@@ -89,8 +89,8 @@ public struct AsyncDNSResolver {
     }
 
     /// See ``DNSResolver/querySRV(name:)``.
-    public func querySRV(name: String) async throws -> [SRVRecord] {
-        try await self.underlying.querySRV(name: name)
+    public func querySRV(name: String, interface: Interface = .default) async throws -> [SRVRecord] {
+        try await self.underlying.querySRV(name: name, interface: interface)
     }
 }
 
@@ -143,7 +143,7 @@ public protocol DNSResolver {
     ///   - name: The name to resolve.
     ///
     /// - Returns: ``PTRRecord`` for the given name.
-    func queryPTR(name: String) async throws -> PTRRecord
+    func queryPTR(name: String, interface: Interface) async throws -> PTRRecord
 
     /// Lookup MX records associated with `name`.
     ///
@@ -167,7 +167,7 @@ public protocol DNSResolver {
     ///   - name: The name to resolve.
     ///
     /// - Returns: ``SRVRecord``s for the given name, empty if no records were found.
-    func querySRV(name: String) async throws -> [SRVRecord]
+    func querySRV(name: String, interface: Interface) async throws -> [SRVRecord]
 }
 
 enum QueryType {
